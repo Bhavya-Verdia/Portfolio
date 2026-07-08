@@ -99,7 +99,7 @@ export const projects: Project[] = [
       "LangGraph multi-agent system with 4 specialized agents + health chatbot",
     ],
     tags: ["Python", "FastAPI", "LangGraph", "ChromaDB", "Azure AI Foundry", "React"],
-    links: { github: "https://github.com/Bhavya-Verdia/Ayura-Ai" },
+    links: { github: "https://github.com/Bhavya-Verdia/Ayura-Ai", live: "https://ayuraai.in" },
   },
   {
     id: "placify",
@@ -118,7 +118,7 @@ export const projects: Project[] = [
       "ReAct career-coach agent + adaptive mock interviews with real-time evaluation",
     ],
     tags: ["React", "FastAPI", "Scikit-learn", "LangChain", "Azure OpenAI"],
-    links: { github: "https://github.com/Bhavya-Verdia/Placify-MP" },
+    links: { github: "https://github.com/Bhavya-Verdia/Placify-MP", live: "https://www.placifyai.dev" },
   },
 ];
 
