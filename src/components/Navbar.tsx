@@ -60,7 +60,7 @@ export default function Navbar() {
 
       <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
         <nav className={styles.nav} aria-label="Primary">
-          <a href="#home" className={styles.logo} aria-label={`${profile.name} — home`}>
+          <a href="#home" className={styles.logo} aria-label={`BV — ${profile.name}, home`}>
             B<span className="gradient-text">V</span>
           </a>
 

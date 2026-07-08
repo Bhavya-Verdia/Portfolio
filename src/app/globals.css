@@ -16,7 +16,7 @@
   /* ---- Text ---- */
   --text: #eef0f5;
   --text-muted: #a2a7b5;
-  --text-dim: #6b7080;
+  --text-dim: #7a8091; /* ≥4.5:1 on --bg for small text (WCAG AA) */
 
   /* ---- Accents ---- */
   --violet: #8b5cf6;
