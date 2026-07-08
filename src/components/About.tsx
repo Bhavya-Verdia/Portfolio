@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPin, Mail, Cpu, Eye, Bot } from "lucide-react";
-import { profile, stats } from "@/lib/data";
+import { profile, stats, terminalLines } from "@/lib/data";
 import Reveal from "./Reveal";
 import styles from "./About.module.css";
 
@@ -58,6 +58,28 @@ export default function About() {
           </Reveal>
 
           <Reveal className={styles.statsWrap} delay={0.1}>
+            <div className={`glass ${styles.terminal}`} aria-label="Profile summary">
+              <div className={styles.terminalBar}>
+                <span className={styles.dot} />
+                <span className={styles.dot} />
+                <span className={styles.dot} />
+                <span className={styles.terminalPath}>bhavya@portfolio ~ %</span>
+              </div>
+              <div className={styles.terminalBody}>
+                {terminalLines.map((line) => (
+                  <div key={line.key} className={styles.terminalLine}>
+                    <span className={styles.prompt}>&gt;</span>
+                    <span className={styles.key}>{line.key}:</span>
+                    <span className={styles.value}>{line.value}</span>
+                  </div>
+                ))}
+                <div className={styles.terminalLine}>
+                  <span className={styles.prompt}>&gt;</span>
+                  <span className={styles.cursor} aria-hidden="true" />
+                </div>
+              </div>
+            </div>
+
             <div className={styles.stats}>
               {stats.map((s) => (
                 <div key={s.label} className={`glass ${styles.stat}`}>

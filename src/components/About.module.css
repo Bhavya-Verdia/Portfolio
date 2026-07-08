@@ -70,6 +70,84 @@ a.metaItem:hover {
   position: sticky;
   top: 6rem;
 }
+
+/* Terminal card */
+.terminal {
+  margin-bottom: 1rem;
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+.terminalBar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--glass-border-strong);
+}
+.dot:nth-child(1) {
+  background: rgba(248, 113, 113, 0.7);
+}
+.dot:nth-child(2) {
+  background: rgba(251, 191, 36, 0.7);
+}
+.dot:nth-child(3) {
+  background: rgba(52, 211, 153, 0.7);
+}
+.terminalPath {
+  margin-left: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+.terminalBody {
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.terminalLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.prompt {
+  color: var(--violet);
+  user-select: none;
+}
+.key {
+  color: var(--cyan);
+}
+.value {
+  color: var(--text-muted);
+}
+.cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  transform: translateY(0.15em);
+  background: var(--violet);
+  animation: blink 1.1s steps(2, start) infinite;
+}
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
 .stats {
   display: grid;
   grid-template-columns: 1fr 1fr;

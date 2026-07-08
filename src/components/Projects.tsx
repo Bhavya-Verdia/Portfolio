@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, ArrowUpRight, X, Check } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
-import { projects } from "@/lib/data";
+import { projects, moreProjects } from "@/lib/data";
 import Reveal from "./Reveal";
 import styles from "./Projects.module.css";
 
@@ -81,6 +81,40 @@ export default function Projects() {
                   Case study <ArrowUpRight size={16} />
                 </span>
               </motion.article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className={styles.moreHead} delay={0.05}>
+          <h3>More projects</h3>
+          <p>Smaller builds and experiments — all public on GitHub.</p>
+        </Reveal>
+
+        <div className={styles.miniGrid}>
+          {moreProjects.map((p, i) => (
+            <Reveal key={p.title} delay={i * 0.06}>
+              <a
+                href={p.github}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.miniCard}
+              >
+                <div className={styles.miniTop}>
+                  <h4 className={styles.miniTitle}>{p.title}</h4>
+                  <span className={styles.miniIcon} aria-hidden="true">
+                    <FaGithub size={17} />
+                    <ArrowUpRight size={15} />
+                  </span>
+                </div>
+                <p className={styles.miniDesc}>{p.description}</p>
+                <div className={styles.tags}>
+                  {p.tags.map((t) => (
+                    <span key={t} className="chip">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </a>
             </Reveal>
           ))}
         </div>
