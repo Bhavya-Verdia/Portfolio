@@ -113,6 +113,15 @@
   margin-top: 0.35rem;
   font-size: 0.95rem;
 }
+.moreHead p a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(139, 92, 246, 0.6);
+}
+.moreHead p a:hover {
+  text-decoration-color: var(--violet);
+}
 
 .miniGrid {
   display: grid;

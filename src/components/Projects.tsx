@@ -87,7 +87,13 @@ export default function Projects() {
 
         <Reveal className={styles.moreHead} delay={0.05}>
           <h3>More projects</h3>
-          <p>Smaller builds and experiments — all public on GitHub.</p>
+          <p>
+            More on{" "}
+            <a href="https://github.com/Bhavya-Verdia" target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+            .
+          </p>
         </Reveal>
 
         <div className={styles.miniGrid}>

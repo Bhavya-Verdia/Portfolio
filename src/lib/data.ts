@@ -138,20 +138,6 @@ export const moreProjects: MiniProject[] = [
     tags: ["Python", "QLoRA", "Mistral-7B", "MLX", "FastAPI", "Docker"],
     github: "https://github.com/Bhavya-Verdia/StyleForge",
   },
-  {
-    title: "Real-Time Voice Translator",
-    description:
-      "Web app that converts speech to text, translates it instantly, and speaks the result back — built with Flask, WebSockets, speech recognition, and gTTS.",
-    tags: ["Python", "Flask", "WebSockets", "Speech Recognition"],
-    github: "https://github.com/Bhavya-Verdia/Real-Time-Translator",
-  },
-  {
-    title: "Food4You",
-    description:
-      "Food-delivery price comparison site that fetches live menu prices, delivery charges, and discounts across platforms like Swiggy and Zomato via APIs.",
-    tags: ["JavaScript", "HTML", "CSS", "REST APIs"],
-    github: "https://github.com/Bhavya-Verdia/Food4You",
-  },
 ];
 
 /** Terminal-card lines rendered in the About section. */
