@@ -1,61 +1,59 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import { Briefcase, GraduationCap, Calendar } from 'lucide-react';
-import styles from './Experience.module.css';
+import { Briefcase, GraduationCap, Calendar, MapPin } from "lucide-react";
+import { timeline } from "@/lib/data";
+import Reveal from "./Reveal";
+import styles from "./Experience.module.css";
 
 export default function Experience() {
   return (
-    <section id="experience" className="section-container">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2 className={styles.sectionTitle}>
-          <span className="text-gradient">Experience</span> & Education
-        </h2>
-        
-        <div className={styles.timeline}>
-          {/* Experience Item */}
-          <div className={styles.timelineItem}>
-            <div className={styles.timelineIcon}>
-              <Briefcase size={20} />
-            </div>
-            <div className={styles.timelineContent}>
-              <div className={styles.timelineHeader}>
-                <h3>AI Intern, Manufacturing IT</h3>
-                <span className={styles.date}><Calendar size={14} /> Feb 2026 – Present</span>
-              </div>
-              <h4 className={styles.organization}>Mahindra & Mahindra Ltd. · Pune</h4>
-              <ul className={styles.timelineList}>
-                <li>Contributing to <strong>Smart Sequencing Digital Twin</strong> with an LLM-based buffer monitoring agent (LangGraph + XGBoost) to forecast buffer starvation.</li>
-                <li>Developed a <strong>Vision AI</strong> system using YOLO to detect wheel center cap mismatches on Thar SUVs.</li>
-                <li>Implemented color validation using OpenCV and an <strong>LLM-based decision layer</strong> (Qwen AI) for edge cases.</li>
-                <li>Automated quality inspection workflow, achieving <strong>97% detection accuracy</strong>.</li>
-              </ul>
-            </div>
-          </div>
+    <section id="experience" className="section">
+      <div className="container">
+        <Reveal className="section-head">
+          <span className="eyebrow">Career</span>
+          <h2>
+            Experience &amp; <span className="gradient-text">education</span>
+          </h2>
+          <p>Where I&apos;ve been building, and what I&apos;m studying.</p>
+        </Reveal>
 
-          {/* Education Item */}
-          <div className={styles.timelineItem}>
-            <div className={styles.timelineIcon}>
-              <GraduationCap size={20} />
-            </div>
-            <div className={styles.timelineContent}>
-              <div className={styles.timelineHeader}>
-                <h3>B.Tech CSE (AI & Analytics)</h3>
-                <span className={styles.date}><Calendar size={14} /> 2022 – 2026</span>
-              </div>
-              <h4 className={styles.organization}>MIT ADT University · Pune</h4>
-              <p className={styles.educationDetails}>
-                Final-year student building production-grade AI systems, LLM-based agents, RAG pipelines, and Vision AI solutions.
-              </p>
-            </div>
-          </div>
+        <div className={styles.timeline}>
+          {timeline.map((item, i) => {
+            const Icon = item.kind === "work" ? Briefcase : GraduationCap;
+            return (
+              <Reveal key={`${item.org}-${i}`} delay={i * 0.08} className={styles.item}>
+                <div className={styles.marker}>
+                  <div className={styles.icon}>
+                    <Icon size={18} />
+                  </div>
+                  {i < timeline.length - 1 && <div className={styles.line} />}
+                </div>
+
+                <div className={`glass ${styles.card}`}>
+                  <div className={styles.top}>
+                    <h3 className={styles.role}>{item.role}</h3>
+                    {item.current && <span className={styles.now}>Current</span>}
+                  </div>
+                  <div className={styles.org}>{item.org}</div>
+                  <div className={styles.metaRow}>
+                    <span>
+                      <Calendar size={14} /> {item.period}
+                    </span>
+                    <span>
+                      <MapPin size={14} /> {item.location}
+                    </span>
+                  </div>
+                  <ul className={styles.points}>
+                    {item.points.map((p, j) => (
+                      <li key={j}>{p}</li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

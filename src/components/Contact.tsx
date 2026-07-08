@@ -1,101 +1,152 @@
 "use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import styles from './Contact.module.css';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, Phone, MapPin, CheckCircle, Send, AlertCircle } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { profile } from "@/lib/data";
+import Reveal from "./Reveal";
+import styles from "./Contact.module.css";
+
+type Status = "idle" | "loading" | "success" | "error";
 
 export default function Contact() {
-  const [formState, setFormState] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setFormState('loading');
-    
-    // Simulate network request
-    setTimeout(() => {
-      setFormState('success');
-    }, 1500);
-  };
+    setStatus("loading");
+    setError("");
+
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form));
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || "Something went wrong.");
+      setStatus("success");
+      form.reset();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setStatus("error");
+    }
+  }
+
+  const details = [
+    { icon: Mail, label: profile.email, href: `mailto:${profile.email}` },
+    { icon: Phone, label: profile.phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
+    { icon: MapPin, label: profile.location },
+  ];
+
   return (
-    <section id="contact" className="section-container">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className={styles.contactWrapper}>
-          <div className={styles.contactInfo}>
-            <h2 className={styles.title}>
-              Let's build something <span className="text-gradient">amazing</span>
+    <section id="contact" className="section">
+      <div className="container">
+        <div className={styles.layout}>
+          <Reveal className={styles.info}>
+            <span className="eyebrow">Contact</span>
+            <h2>
+              Let&apos;s build something <span className="gradient-text">great</span>.
             </h2>
-            <p className={styles.description}>
-              I'm always open to discussing new opportunities, collaborations, or discussing the latest in Generative AI and computer vision.
+            <p>
+              I&apos;m open to AI/ML roles, internships, and collaborations. Drop me a
+              message and I&apos;ll get back to you soon.
             </p>
-            
+
             <div className={styles.details}>
-              <a href="mailto:verdiabhavya08@gmail.com" className={styles.detailItem}>
-                <div className={styles.iconWrapper}><Mail size={20} /></div>
-                <span>verdiabhavya08@gmail.com</span>
-              </a>
-              <div className={styles.detailItem}>
-                <div className={styles.iconWrapper}><Phone size={20} /></div>
-                <span>+91 8905040118</span>
-              </div>
-              <div className={styles.detailItem}>
-                <div className={styles.iconWrapper}><MapPin size={20} /></div>
-                <span>Pune, Maharashtra</span>
-              </div>
+              {details.map((d) =>
+                d.href ? (
+                  <a key={d.label} href={d.href} className={styles.detail}>
+                    <span className={styles.detailIcon}>
+                      <d.icon size={18} />
+                    </span>
+                    {d.label}
+                  </a>
+                ) : (
+                  <div key={d.label} className={styles.detail}>
+                    <span className={styles.detailIcon}>
+                      <d.icon size={18} />
+                    </span>
+                    {d.label}
+                  </div>
+                )
+              )}
             </div>
-            
+
             <div className={styles.socials}>
-              <a href="https://github.com/Bhavya-Verdia" target="_blank" rel="noreferrer" className={styles.socialBtn}>
-                <FaGithub size={24} />
+              <a href={profile.socials.github} target="_blank" rel="noreferrer" aria-label="GitHub" className={styles.social}>
+                <FaGithub size={20} />
               </a>
-              <a href="https://linkedin.com/in/bhavyaverdia" target="_blank" rel="noreferrer" className={styles.socialBtn}>
-                <FaLinkedin size={24} />
+              <a href={profile.socials.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className={styles.social}>
+                <FaLinkedin size={20} />
               </a>
             </div>
-          </div>
-          
-          <div className={styles.formWrapper}>
-            {formState === 'success' ? (
-              <motion.div 
-                className={styles.successMessage}
-                initial={{ opacity: 0, scale: 0.9 }}
+          </Reveal>
+
+          <Reveal className={styles.formWrap} delay={0.1}>
+            {status === "success" ? (
+              <motion.div
+                className={`glass ${styles.success}`}
+                initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
               >
-                <CheckCircle size={48} className={styles.successIcon} />
-                <h3>Message Sent!</h3>
-                <p>Thanks for reaching out. I'll get back to you soon.</p>
-                <button onClick={() => setFormState('idle')} className={styles.secondaryBtn}>
-                  Send Another
+                <CheckCircle size={44} className={styles.successIcon} />
+                <h3>Message sent!</h3>
+                <p>Thanks for reaching out — I&apos;ll reply as soon as I can.</p>
+                <button className="btn btn-ghost" onClick={() => setStatus("idle")}>
+                  Send another
                 </button>
               </motion.div>
             ) : (
-              <form className={styles.form} onSubmit={handleSubmit}>
-                <div className={styles.inputGroup}>
+              <form className={`glass ${styles.form}`} onSubmit={handleSubmit}>
+                <div className={styles.field}>
                   <label htmlFor="name">Name</label>
-                  <input type="text" id="name" required placeholder="John Doe" disabled={formState === 'loading'} />
+                  <input id="name" name="name" type="text" required placeholder="Your name" disabled={status === "loading"} />
                 </div>
-                <div className={styles.inputGroup}>
+                <div className={styles.field}>
                   <label htmlFor="email">Email</label>
-                  <input type="email" id="email" required placeholder="john@example.com" disabled={formState === 'loading'} />
+                  <input id="email" name="email" type="email" required placeholder="you@example.com" disabled={status === "loading"} />
                 </div>
-                <div className={styles.inputGroup}>
+                <div className={styles.field}>
                   <label htmlFor="message">Message</label>
-                  <textarea id="message" required rows={5} placeholder="Hello Bhavya, I'd like to talk about..." disabled={formState === 'loading'}></textarea>
+                  <textarea id="message" name="message" required rows={5} placeholder="Hi Bhavya, I'd love to talk about..." disabled={status === "loading"} />
                 </div>
-                <button type="submit" className={styles.submitBtn} disabled={formState === 'loading'}>
-                  {formState === 'loading' ? 'Sending...' : 'Send Message'}
+
+                {/* Honeypot: hidden from users, catches bots */}
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className={styles.honeypot}
+                />
+
+                {status === "error" && (
+                  <p className={styles.errorMsg}>
+                    <AlertCircle size={16} /> {error}
+                  </p>
+                )}
+
+                <button type="submit" className="btn btn-primary" disabled={status === "loading"}>
+                  {status === "loading" ? (
+                    "Sending…"
+                  ) : (
+                    <>
+                      <Send size={16} /> Send message
+                    </>
+                  )}
                 </button>
               </form>
             )}
-          </div>
+          </Reveal>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -1,76 +1,49 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import styles from './Skills.module.css';
+import { Brain, Network, Server, Wrench } from "lucide-react";
+import { skillGroups } from "@/lib/data";
+import Reveal from "./Reveal";
+import styles from "./Skills.module.css";
 
-const skillCategories = [
-  {
-    title: 'AI & Machine Learning',
-    skills: ['Scikit-learn', 'PyTorch', 'YOLO', 'OpenCV', 'NLP', 'Generative AI'],
-    level: 95
-  },
-  {
-    title: 'LLM & Orchestration',
-    skills: ['LangChain', 'LangGraph', 'RAG', 'Azure AI Foundry', 'OpenAI APIs'],
-    level: 90
-  },
-  {
-    title: 'Backend & Databases',
-    skills: ['Python', 'Java', 'FastAPI', 'Flask', 'MySQL', 'MongoDB', 'ChromaDB'],
-    level: 85
-  },
-  {
-    title: 'Tools & Fundamentals',
-    skills: ['DSA', 'OOP', 'DBMS', 'Git', 'Docker', 'Pandas', 'NumPy', 'Transformers'],
-    level: 88
-  }
-];
+const icons = [Brain, Network, Server, Wrench];
 
 export default function Skills() {
   return (
-    <section id="skills" className="section-container">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2 className={styles.sectionTitle}>
-          Technical <span className="text-gradient">Skills</span>
-        </h2>
-        
-        <div className={styles.skillsGrid}>
-          {skillCategories.map((category, index) => (
-            <motion.div 
-              key={index}
-              className={styles.skillCard}
-              whileHover={{ y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className={styles.categoryHeader}>
-                <h3 className={styles.categoryTitle}>{category.title}</h3>
-                <span className={styles.categoryLevel}>{category.level}%</span>
-              </div>
-              <div className={styles.progressTrack}>
-                <motion.div 
-                  className={styles.progressFill}
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${category.level}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 0.2 + (index * 0.1), ease: "easeOut" }}
-                />
-              </div>
-              <div className={styles.tagsContainer}>
-                {category.skills.map((skill, i) => (
-                  <span key={i} className={styles.skillTag}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+    <section id="skills" className="section">
+      <div className="container">
+        <Reveal className="section-head">
+          <span className="eyebrow">Toolkit</span>
+          <h2>
+            Technical <span className="gradient-text">skills</span>
+          </h2>
+          <p>The stack I reach for when taking an idea from prototype to production.</p>
+        </Reveal>
+
+        <div className={styles.grid}>
+          {skillGroups.map((group, i) => {
+            const Icon = icons[i % icons.length];
+            return (
+              <Reveal key={group.title} delay={i * 0.07}>
+                <div className={`glass ${styles.card}`}>
+                  <div className={styles.head}>
+                    <div className={styles.icon}>
+                      <Icon size={18} />
+                    </div>
+                    <h3 className={styles.title}>{group.title}</h3>
+                  </div>
+                  <div className={styles.chips}>
+                    {group.skills.map((s) => (
+                      <span key={s} className="chip">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

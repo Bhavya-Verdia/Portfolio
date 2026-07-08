@@ -1,0 +1,95 @@
+.footer {
+  padding-top: 3rem;
+  padding-bottom: 2.5rem;
+}
+
+.inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding-top: 2.5rem;
+}
+
+.brand .logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.brand p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  max-width: 18rem;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+.links a {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+.links a:hover {
+  color: var(--text);
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+.socials {
+  display: flex;
+  gap: 0.5rem;
+}
+.socials a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--glass-border);
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.socials a:hover {
+  color: var(--text);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-2px);
+}
+.top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.top:hover {
+  color: var(--text);
+}
+
+.legal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 640px) {
+  .right {
+    align-items: flex-start;
+  }
+}

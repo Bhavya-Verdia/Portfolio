@@ -1,91 +1,155 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { motion, useScroll, useSpring } from 'framer-motion';
-import styles from './Navbar.module.css';
-
-const navItems = [
-  { name: 'Home', href: '#' },
-  { name: 'Experience', href: '#experience' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Contact', href: '#contact' },
-];
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { Menu, X, FileText } from "lucide-react";
+import { navItems, profile } from "@/lib/data";
+import styles from "./Navbar.module.css";
 
 export default function Navbar() {
-  const [activeSection, setActiveSection] = useState('Home');
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [active, setActive] = useState("home");
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
+    stiffness: 120,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      // Update active section
-      const sections = navItems.map(item => item.name.toLowerCase());
-      
-      for (const section of sections.reverse()) {
-        const element = document.getElementById(section === 'home' ? '' : section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 100) {
-            setActiveSection(section.charAt(0).toUpperCase() + section.slice(1));
-            break;
-          }
-        } else if (section === 'home' && window.scrollY < 100) {
-           setActiveSection('Home');
-           break;
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Track the section currently in view.
+  useEffect(() => {
+    const ids = navItems.map((i) => i.href.replace("#", ""));
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.25, 0.5, 1] }
+    );
+
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
+  // Lock body scroll while the mobile menu is open.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   return (
     <>
-      <motion.div
-        className={styles.progressBar}
-        style={{ scaleX }}
-      />
-      <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
-        <nav className={styles.nav}>
-          <div className={styles.logo}>
-            B<span className="text-gradient">V</span>
-          </div>
-          <ul className={styles.navList}>
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <a 
-                  href={item.href}
-                  className={`${styles.navLink} ${activeSection === item.name ? styles.active : ''}`}
-                  onClick={(e) => {
-                    if (item.href === '#') {
-                      e.preventDefault();
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                  }}
-                >
-                  {item.name}
-                  {activeSection === item.name && (
-                    <motion.div
-                      layoutId="activeNavIndicator"
-                      className={styles.activeIndicator}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                </a>
-              </li>
-            ))}
+      <motion.div className={styles.progress} style={{ scaleX }} aria-hidden="true" />
+
+      <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
+        <nav className={styles.nav} aria-label="Primary">
+          <a href="#home" className={styles.logo} aria-label={`${profile.name} — home`}>
+            B<span className="gradient-text">V</span>
+          </a>
+
+          <ul className={styles.links}>
+            {navItems.map((item) => {
+              const id = item.href.replace("#", "");
+              const isActive = active === id;
+              return (
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    className={`${styles.link} ${isActive ? styles.active : ""}`}
+                  >
+                    {item.name}
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        className={styles.underline}
+                        transition={{ type: "spring", bounce: 0.25, duration: 0.6 }}
+                      />
+                    )}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
+
+          <div className={styles.right}>
+            <a
+              href={profile.resumeUrl}
+              className={`btn btn-ghost ${styles.resumeBtn}`}
+              download
+            >
+              <FileText size={16} />
+              Résumé
+            </a>
+            <button
+              className={styles.menuBtn}
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu size={22} />
+            </button>
+          </div>
         </nav>
       </header>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className={styles.mobileMenu}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <button
+              className={styles.closeBtn}
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <X size={26} />
+            </button>
+            <ul className={styles.mobileLinks}>
+              {navItems.map((item, i) => (
+                <motion.li
+                  key={item.name}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.08 + i * 0.06 }}
+                >
+                  <a href={item.href} onClick={() => setMenuOpen(false)}>
+                    {item.name}
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+            <a
+              href={profile.resumeUrl}
+              download
+              className="btn btn-primary"
+              onClick={() => setMenuOpen(false)}
+            >
+              <FileText size={16} />
+              Download Résumé
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
